@@ -11,3 +11,17 @@ app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
 app.include_router(auth_router)
 app.include_router(ticket_router)
+from fastapi import Request
+from fastapi.templating import Jinja2Templates
+from db import SessionLocal, Ticket
+
+# Tells FastAPI where to find your HTML templates
+templates = Jinja2Templates(directory="templates")
+
+@app.get("/dashboard")
+def dashboard(request: Request):
+    db = SessionLocal()  # open DB session
+    tickets = db.query(Ticket).all()  # get all ticket records
+    db.close()  # close session
+    return templates.TemplateResponse("dashboard.html", {"request": request, "tickets": tickets})
+
