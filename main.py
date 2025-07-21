@@ -1,3 +1,7 @@
+from db import Base, engine
+
+# Create tables on startup
+Base.metadata.create_all(bind=engine)
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from auth import router as auth_router
